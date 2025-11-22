@@ -88,15 +88,13 @@ int main()
         char username[100];
         char password[100];
         FILE *production_file;
-        float planned_downtime;
-        float unplanned_downtime;
+        FILE *summery_file;
         float planned_break_time;
+        float unplanned_downtime;
         float ideal_speed;
-        float total_panels;
+        float total_panels_produced;
         float scrap_panels;
         float planned_production_time;
-        float downtime;
-        float total_panels_produced;
         float operating_time;
         float pieces_produced;
         float acceptable_pieces;
@@ -105,7 +103,6 @@ int main()
         float quality;
         float oee;
 
-        printf("%d \n", PRODUCTIONTIME);
         printf("Overall Equipment Effectiveness Calculator\n");
         printf("--------------------------------------------\n");
         printf(" \n");
@@ -152,11 +149,6 @@ int main()
                             printf(" \n");
                             fclose(production_file);
                     }
-                    printf("%f \n", planned_break_time);
-                    printf("%f \n", unplanned_downtime);
-                    printf("%f \n", ideal_speed);
-                    printf("%f \n", total_panels_produced);
-                    printf("%f \n", scrap_panels);
 
                     fclose(production_file);
 
@@ -175,11 +167,63 @@ int main()
                     quality = calculate_quality(acceptable_pieces, total_panels_produced);
                     oee = calculate_oee(availability, performance, quality);
 
+                    printf(" \n");
+                    printf("Production Data Summary Report\n");
+                    printf("------------------------------------\n");
+                    printf("Planned Break Time: %.2f minutes\n", planned_break_time);
+                    printf("Unplanned Downtime: %.2f minutes\n", unplanned_downtime);
+                    printf("Ideal Machine Rate: %.2f panels per minute\n", ideal_speed);
+                    printf("Total Panels Produced: %.2f\n", total_panels_produced);
+                    printf("Scrap Panels: %.2f\n", scrap_panels);
+                    printf("------------------------------------\n");
+
                     // Display results on the console
+                    printf(" \n");
                     printf("Availability: %.2f%%\n", availability * 100);
                     printf("Performance: %.2f%%\n", performance);
                     printf("Quality: %.2f%%\n", quality);
                     printf("OEE: %.2f%%\n", oee * 100);
+                    printf(" \n");
+
+                    // Open the output file to write the report
+                    summery_file = fopen("oee_report.txt", "w");
+                    if (summery_file == NULL) {
+                        printf(" \n");
+                        printf("Error: Could not open production file.\n");
+                        printf(" \n");
+                    }
+
+                    // Write the results to the output file
+                    fprintf(production_file, "Production Data Summary Report\n");
+                    fprintf(production_file, "------------------------------------\n");
+                    fprintf(production_file, "Planned Break Time: %.2f minutes\n", planned_break_time);
+                    fprintf(production_file, "Unplanned Downtime: %.2f minutes\n", unplanned_downtime);
+                    fprintf(production_file, "Ideal Machine Rate: %.2f panels per minute\n", ideal_speed);
+                    fprintf(production_file, "Total Panels Produced: %.2f\n", total_panels_produced);
+                    fprintf(production_file, "Scrap Panels: %.2f\n", scrap_panels);
+                    fprintf(production_file, "------------------------------------\n");
+
+                    fprintf(production_file, "OEE Calculation Components:\n");
+                    fprintf(production_file, "------------------------------------\n");
+                    fprintf(production_file, "Availability: %.2f%%\n", availability * 100);
+                    fprintf(production_file, "Performance: %.2f%%\n", performance);
+                    fprintf(production_file, "Quality: %.2f%%\n", quality);
+                    fprintf(production_file, "OEE: %.2f%%\n", oee * 100);
+
+                    // Check if OEE is above or below 80%
+                    if (oee >= 0.80) {
+                        printf("The production line is performing well, with an OEE of 80 or higher, meeting the target standards..\n");
+                        printf(" \n");
+                        fprintf(production_file, "The production line is performing well, with an OEE of 80 or higher, meeting the target standards..\n");
+                    } else {
+                        printf("The production line is falling short of the target, with an OEE below 80. Improvement is needed to meet the required standards.\n");
+                        printf(" \n");
+                        fprintf(production_file, "The production line is falling short of the target, with an OEE below 80%. Improvement is needed to meet the required standards.\n");
+                    }
+
+                    // Close the output file
+                    fprintf(production_file, "------------------------------------\n");
+                    fclose(production_file);
 
                     continue;
                 case 2:
