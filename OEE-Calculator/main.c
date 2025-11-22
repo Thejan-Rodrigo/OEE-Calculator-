@@ -39,6 +39,25 @@ void create_account(const char *username, const char *password) {
     printf(" \n");
 }
 
+int authenticate(const char *username, const char *password) {
+    FILE *file = fopen(USERDATA, "r");
+    if (file == NULL) {
+        return 2;
+    }
+
+    char stored_username[100];
+    char stored_password[100];
+    while (fscanf(file, "%s %s", stored_username, stored_password) != EOF) {
+        if (strcmp(stored_username, username) == 0 && strcmp(stored_password, password) == 0) {
+            fclose(file);
+            return 1; // Authentication successful
+        }
+    }
+
+    fclose(file);
+    return 0; // Authentication failed
+}
+
 int main()
 {
     while(1){
@@ -59,8 +78,28 @@ int main()
 
         switch(choice){
          case 1:
-            printf("Login Page!");
-            break;
+            printf("Login Page\n");
+            printf("------------------\n");
+            printf("Enter username: ");
+            scanf("%s", &username);
+            printf("Enter password: ");
+            scanf("%s", &password);
+            int isUser = authenticate(username, password);
+            switch(isUser){
+                case 0:
+                    printf(" \n");
+                    printf("Authentication failed! Please try again! \n");
+                    printf(" \n");
+                    break;
+                case 1:
+                    continue;
+                case 2:
+                    printf(" \n");
+                    printf("Error opening file that in path %s .\n", USERDATA);
+                    printf(" \n");
+                    break;
+            }
+            continue;
 
          case 2:
             while(1){
