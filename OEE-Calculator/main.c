@@ -51,6 +51,7 @@ int main()
         printf(" \n");
         printf("1. Login\n");
         printf("2. Create Account\n");
+        printf("3. Exit\n");
         printf(" \n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -60,6 +61,7 @@ int main()
          case 1:
             printf("Login Page!");
             break;
+
          case 2:
             while(1){
                 printf("Create Account\n");
@@ -87,6 +89,13 @@ int main()
                 break;
             }
             continue;
+
+          case 3:
+              printf(" \n");
+              printf("Good Bye!\n");
+              printf(" \n");
+              break;
+
          default:
             printf(" \n");
             printf("Invalid choice selected!\n");
