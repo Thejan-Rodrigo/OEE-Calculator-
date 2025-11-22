@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define USERDATA "userData.txt"
+#define PRODUCTIONDATA "production_data.txt"
 
 // Function to check if username already exists
 int username_exists(const char *username) {
@@ -10,7 +11,8 @@ int username_exists(const char *username) {
         return 2; // File doesn't exist, no usernames yet
     }
 
-    char stored_username[100], stored_password[100];
+    char stored_username[100];
+    char stored_password[100];
     while (fscanf(file, "%s %s", stored_username, stored_password) != EOF) {
         if (strcmp(stored_username, username) == 0) {
             fclose(file);
@@ -64,6 +66,12 @@ int main()
         int choice;
         char username[100];
         char password[100];
+        FILE *production_file;
+        float planned_downtime;
+        float total_production_time;
+        float ideal_speed;
+        float total_panels;
+        float scrap_panels;
 
         printf("Overall Equipment Effectiveness Calculator\n");
         printf("--------------------------------------------\n");
@@ -92,6 +100,31 @@ int main()
                     printf(" \n");
                     break;
                 case 1:
+
+                    production_file = fopen(PRODUCTIONDATA, "r");
+                    if (production_file == NULL) {
+                        printf(" \n");
+                        printf("Error: Could not open production file.\n");
+                        printf(" \n");
+                    }
+
+                    // Read data from the file (assuming one value per line)
+                    if (fscanf(production_file, "%f", &planned_downtime) != 1 ||
+                        fscanf(production_file, "%f", &total_production_time) != 1 ||
+                        fscanf(production_file, "%f", &ideal_speed) != 1 ||
+                        fscanf(production_file, "%f", &total_panels) != 1 ||
+                        fscanf(production_file, "%f", &scrap_panels) != 1) {
+                            printf(" \n");
+                            printf("Error: Invalid or incomplete data in the input file.\n");
+                            printf(" \n");
+                            fclose(production_file);
+                    }
+                    printf("planned_downtime: %f\n", planned_downtime);
+                    printf("total_production_time: %f\n", total_production_time);
+                    printf("ideal_speed: %f\n", ideal_speed);
+                    printf("total_panels: %f\n", total_panels);
+                    printf("scrap_panels: %f\n", scrap_panels);
+
                     continue;
                 case 2:
                     printf(" \n");
