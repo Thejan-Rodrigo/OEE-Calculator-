@@ -3,6 +3,7 @@
 
 #define USERDATA "userData.txt"
 #define PRODUCTIONDATA "production_data.txt"
+#define PRODUCTIONTIME 480
 
 // Function to check if username already exists
 int username_exists(const char *username) {
@@ -60,6 +61,26 @@ int authenticate(const char *username, const char *password) {
     return 0; // Authentication failed
 }
 
+// Function to calculate availability
+float calculate_availability(float operating_time, float planned_production_time) {
+    return operating_time / planned_production_time;
+}
+
+// Function to calculate performance
+float calculate_performance(float pieces_produced, float ideal_speed, float operating_time) {
+    return (pieces_produced / (ideal_speed * operating_time)) * 100;
+}
+
+// Function to calculate quality
+float calculate_quality(float acceptable_pieces, float total_pieces) {
+    return (acceptable_pieces / total_pieces) * 100;
+}
+
+// Function to calculate OEE
+float calculate_oee(float availability, float performance, float quality) {
+    return (availability * performance * quality) / 10000;  // OEE is percentage, so divided by 10000
+}
+
 int main()
 {
     while(1){
@@ -68,11 +89,23 @@ int main()
         char password[100];
         FILE *production_file;
         float planned_downtime;
-        float total_production_time;
+        float unplanned_downtime;
+        float planned_break_time;
         float ideal_speed;
         float total_panels;
         float scrap_panels;
+        float planned_production_time;
+        float downtime;
+        float total_panels_produced;
+        float operating_time;
+        float pieces_produced;
+        float acceptable_pieces;
+        float availability;
+        float performance;
+        float quality;
+        float oee;
 
+        printf("%d \n", PRODUCTIONTIME);
         printf("Overall Equipment Effectiveness Calculator\n");
         printf("--------------------------------------------\n");
         printf(" \n");
@@ -109,21 +142,44 @@ int main()
                     }
 
                     // Read data from the file (assuming one value per line)
-                    if (fscanf(production_file, "%f", &planned_downtime) != 1 ||
-                        fscanf(production_file, "%f", &total_production_time) != 1 ||
+                    if (fscanf(production_file, "%f", &planned_break_time) != 1 ||
+                        fscanf(production_file, "%f", &unplanned_downtime) != 1 ||
                         fscanf(production_file, "%f", &ideal_speed) != 1 ||
-                        fscanf(production_file, "%f", &total_panels) != 1 ||
+                        fscanf(production_file, "%f", &total_panels_produced) != 1 ||
                         fscanf(production_file, "%f", &scrap_panels) != 1) {
                             printf(" \n");
                             printf("Error: Invalid or incomplete data in the input file.\n");
                             printf(" \n");
                             fclose(production_file);
                     }
-                    printf("planned_downtime: %f\n", planned_downtime);
-                    printf("total_production_time: %f\n", total_production_time);
-                    printf("ideal_speed: %f\n", ideal_speed);
-                    printf("total_panels: %f\n", total_panels);
-                    printf("scrap_panels: %f\n", scrap_panels);
+                    printf("%f \n", planned_break_time);
+                    printf("%f \n", unplanned_downtime);
+                    printf("%f \n", ideal_speed);
+                    printf("%f \n", total_panels_produced);
+                    printf("%f \n", scrap_panels);
+
+                    fclose(production_file);
+
+                    // Calculate the planned production time
+                    planned_production_time = PRODUCTIONTIME - planned_break_time;
+
+                    // Calculate operating time (planned production time - unplanned downtime)
+                    operating_time = planned_production_time - unplanned_downtime;
+
+                    // Calculate total pieces produced (acceptable pieces + scrap pieces)
+                    pieces_produced = total_panels_produced;
+                    acceptable_pieces = total_panels_produced - scrap_panels;
+
+                    availability = calculate_availability(operating_time, planned_production_time);
+                    performance = calculate_performance(pieces_produced, ideal_speed, operating_time);
+                    quality = calculate_quality(acceptable_pieces, total_panels_produced);
+                    oee = calculate_oee(availability, performance, quality);
+
+                    // Display results on the console
+                    printf("Availability: %.2f%%\n", availability * 100);
+                    printf("Performance: %.2f%%\n", performance);
+                    printf("Quality: %.2f%%\n", quality);
+                    printf("OEE: %.2f%%\n", oee * 100);
 
                     continue;
                 case 2:
