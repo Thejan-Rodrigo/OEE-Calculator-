@@ -22,11 +22,29 @@ int username_exists(const char *username) {
     return 0; // Username does not exist
 }
 
+// Function to create a new user
+void create_account(const char *username, const char *password) {
+    FILE *file = fopen(USERDATA, "a");
+    if (file == NULL) {
+        printf(" \n");
+        printf("Error opening file that in path %s .\n", USERDATA);
+        printf(" \n");
+        return;
+    }
+
+    fprintf(file, "%s %s\n", username, password);
+    fclose(file);
+    printf(" \n");
+    printf("Account created successfully.\n");
+    printf(" \n");
+}
+
 int main()
 {
     while(1){
         int choice;
         char username[100];
+        char password[100];
 
         printf("Overall Equipment Effectiveness Calculator\n");
         printf("--------------------------------------------\n");
@@ -51,10 +69,13 @@ int main()
                 int isExists = username_exists(username);
                 switch(isExists){
                   case 0:
+                      printf("Enter password: ");
+                      scanf("%s", &password);
+                      create_account(username, password);
                       break;
                   case 1:
                       printf(" \n");
-                      printf("User Name Exists! Please User another User name\n");
+                      printf("User Name Exists! Please Use another Username\n");
                       printf(" \n");
                       continue;
                   case 2:
@@ -65,9 +86,7 @@ int main()
                 }
                 break;
             }
-
-
-            break;
+            continue;
          default:
             printf(" \n");
             printf("Invalid choice selected!\n");
