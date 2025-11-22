@@ -1,0 +1,16 @@
+Production Data Summary Report
+------------------------------------
+Planned Break Time: 30.00 minutes
+Unplanned Downtime: 25.00 minutes
+Ideal Machine Rate: 220.00 panels per minute
+Total Panels Produced: 92000.00
+Scrap Panels: 7500.00
+------------------------------------
+OEE Calculation Components:
+------------------------------------
+Availability: 94.44%
+Performance: 98.40%
+Quality: 91.85%
+OEE: 85.35%
+The production line is performing well, with an OEE of 80 or higher, meeting the target standards..
+------------------------------------
