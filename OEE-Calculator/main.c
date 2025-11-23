@@ -5,6 +5,21 @@
 #define PRODUCTIONDATA "production_data.txt"
 #define PRODUCTIONTIME 480
 
+// Function to compare two strings manually
+int are_strings_equal(const char *str1, const char *str2) {
+    // Compare each character one by one
+    while (*str1 != '\0' && *str2 != '\0') {
+        if (*str1 != *str2) {
+            return 0;  // Strings are not equal
+        }
+        str1++;
+        str2++;
+    }
+
+    // Check if both strings ended at the same time (same length)
+    return *str1 == *str2;
+}
+
 // Function to check if username already exists
 int username_exists(const char *username) {
     FILE *file = fopen(USERDATA, "r");
@@ -15,7 +30,7 @@ int username_exists(const char *username) {
     char stored_username[100];
     char stored_password[100];
     while (fscanf(file, "%s %s", stored_username, stored_password) != EOF) {
-        if (strcmp(stored_username, username) == 0) {
+        if (are_strings_equal(stored_username ,username) == 1) {
             fclose(file);
             return 1; // Username exists
         }
@@ -51,7 +66,7 @@ int authenticate(const char *username, const char *password) {
     char stored_username[100];
     char stored_password[100];
     while (fscanf(file, "%s %s", stored_username, stored_password) != EOF) {
-        if (strcmp(stored_username, username) == 0 && strcmp(stored_password, password) == 0) {
+        if (are_strings_equal(stored_username, username) == 1 && are_strings_equal(stored_password, password) == 1) {
             fclose(file);
             return 1; // Authentication successful
         }

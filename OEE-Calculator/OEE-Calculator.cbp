@@ -33,7 +33,6 @@
 		</Compiler>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
-			<Option compile="0" />
 		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
